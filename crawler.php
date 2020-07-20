@@ -1,4 +1,5 @@
 <?php
+include("config.php");
 include("classes/DomParser.php");
 
 $crawlingList = array();        // urls to crawl
@@ -64,6 +65,22 @@ function getDetails($url) {
 	$keywords = str_replace("\n", "", $keywords);
 }
 
+
+/**
+ * Insert urls into database
+ */
+function insertLinkToDb($url, $title, $description, $keywords) {
+    global $conn;
+    $query = $conn->prepare("INSERT INTO sites(url, title, description, keywords)
+							VALUES(:url, :title, :description, :keywords)");
+
+	$query->bindParam(":url", $url);
+	$query->bindParam(":title", $title);
+	$query->bindParam(":description", $description);
+	$query->bindParam(":keywords", $keywords);
+
+	return $query->execute();
+}
 
 
 
