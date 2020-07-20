@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lookup</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-    <div class="main">
+    <div class="main-wrapper index-page">
         <div class="logo-wrapper">
             <img src="assets/images/logo.png" alt="Lookup_Logo">
         </div>
 
         <div class="search-wrapper">
-            <input class="search-box" type="text" name="q">
-            <input class="serach-button" type="submit" value="Search">
+            <form action="search.php">
+                <input class="search-box" type="text" name="q">
+                <input class="search-button" type="submit" value="Search">
+            </form>
         </div>
     </div>
 </body>
+
 </html>
