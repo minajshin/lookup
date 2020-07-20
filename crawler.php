@@ -62,8 +62,33 @@ function getDetails($url) {
 		}
     }
     $description = str_replace("\n", "", $description);
-	$keywords = str_replace("\n", "", $keywords);
+    $keywords = str_replace("\n", "", $keywords);
+    
+    if(linkExists($url)) {
+		echo "$url already exists<br>";
+	}
+	else if(insertLink($url, $title, $description, $keywords)) {
+		echo "$url inserted<br>";
+	}
+	else {
+		echo "Failed to insert $url<br>";
+	}
 }
+
+
+/**
+ * Check if a link exsists in the database already
+ */
+function linkExists($url) {
+    global $conn;
+    $query = $conn->prepare("SELECT * FROM sites WHERE url=:url");
+
+    $query->bindParam(":url", $url);
+    $query->execute();
+
+    return $query->rowCount() != 0;
+}
+
 
 
 /**
@@ -106,6 +131,7 @@ function followLinks($url) {
 
             getDetails($href);
         }
+        else return;
     }
 
     array_shift($crawlingList);
@@ -115,5 +141,5 @@ function followLinks($url) {
 }
 
 
-$startUrl = "http://www.bbc.com";
+$startUrl = "http://www.cnn.com";
 followLinks($startUrl);
