@@ -1,6 +1,6 @@
+<?php ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
-<body>
-    <div class="main-wrapper index-page">
+<body class="wrapper index-page">
+    <main class="content">
         <div class="logo-wrapper">
             <img src="assets/images/logo.png" alt="Lookup_Logo">
         </div>
@@ -20,7 +20,6 @@
                 <input class="search-button" type="submit" value="Search">
             </form>
         </div>
-    </div>
+    </main>
 </body>
-
 </html>
