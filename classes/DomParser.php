@@ -13,10 +13,24 @@ class DomParser {
     }
 
     /**
-     * Return all links in the document
+     * Get all links in the document
      */
     public function getLinks() {
         return $this->doc->getElementsByTagName("a");
+    }
+
+    /**
+     * Parse the title of the page
+     */
+    public function getTitleTags() {
+        return $this->doc->getElementsByTagName("title");
+    }
+
+     /**
+     * Parse meta tags of the page
+     */
+    public function getMetaTags() {
+        return $this->doc->getElementsByTagName("meta");
     }
 }
 ?>

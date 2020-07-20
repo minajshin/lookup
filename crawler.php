@@ -1,6 +1,8 @@
 <?php
 include("classes/DomParser.php");
 
+$crawlingList = array();        // urls to crawl
+$crawledList = array();         // urls already crawled
 
 /**
  * Convert a relative link to absolute url
@@ -29,7 +31,46 @@ function createLink($src, $url) {
 }
 
 
+/**
+ * Get details of the given url
+ */
+function getDetails($url) {
+    $parser = new DomParser($url);
+    $titleTags = $parser->getTitleTags();
+    if (sizeof($titleTags) == 0 || $titleTags->item(0) == NULL) {
+        return;
+    }
+
+    $title = $titleTags->item(0)->nodeValue;
+    $title = str_replace("\n", "", $title);
+    if ($title == "") {
+        return;
+    } 
+
+
+	$description = "";
+	$keywords = "";
+    $metaTags = $parser->getMetaTags();
+    foreach($metaTags as $meta) {
+		if($meta->getAttribute("name") == "description") {
+			$description = $meta->getAttribute("content");
+		}
+
+		if($meta->getAttribute("name") == "keywords") {
+			$keywords = $meta->getAttribute("content");
+		}
+    }
+    $description = str_replace("\n", "", $description);
+	$keywords = str_replace("\n", "", $keywords);
+}
+
+
+
+
 function followLinks($url) {
+    global $crawlingList;
+    global $crawledList;
+
     $parser = new DomParser($url);
 
     $linkList = $parser->getLinks();
@@ -41,7 +82,18 @@ function followLinks($url) {
         }
 
         $href = createLink($href, $url);
-        echo $href . "<br>";
+
+        if (!in_array($href, $crawledList)) {
+            $crawlingList[] = $href;
+            $crawledList[] = $href;
+
+            getDetails($href);
+        }
+    }
+
+    array_shift($crawlingList);
+    foreach($crawlingList as $site) {
+        followLinks($site);
     }
 }
 
