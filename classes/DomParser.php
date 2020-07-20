@@ -9,7 +9,7 @@ class DomParser {
         );
         $context = stream_context_create($options);
         $this->doc = new DomDocument();
-        $this->doc->loadHTML(file_get_contents($url, false, $context));
+        @$this->doc->loadHTML(file_get_contents($url, false, $context));
     }
 
     /**
@@ -31,6 +31,14 @@ class DomParser {
      */
     public function getMetaTags() {
         return $this->doc->getElementsByTagName("meta");
+    }
+
+
+    /**
+     * Parse img tags of the page
+     */
+    public function getImgTags() {
+        return $this->doc->getElementsByTagName("img");
     }
 }
 ?>

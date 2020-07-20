@@ -3,7 +3,8 @@ include("config.php");
 include("classes/DomParser.php");
 
 $crawlingList = array();        // urls to crawl
-$crawledList = array();         // urls already crawled
+$crawledSites = array();         // urls already crawled
+$crawledImages = array();         // urls already crawled
 
 /**
  * Convert a relative link to absolute url
@@ -36,6 +37,8 @@ function createLink($src, $url) {
  * Get details of the given url
  */
 function getDetails($url) {
+    global $crawledImages;
+
     $parser = new DomParser($url);
     $titleTags = $parser->getTitleTags();
     if (sizeof($titleTags) == 0 || $titleTags->item(0) == NULL) {
@@ -67,12 +70,30 @@ function getDetails($url) {
     if(linkExists($url)) {
 		echo "$url already exists<br>";
 	}
-	else if(insertLink($url, $title, $description, $keywords)) {
+	else if(insertLinkToDb($url, $title, $description, $keywords)) {
 		echo "$url inserted<br>";
 	}
 	else {
 		echo "Failed to insert $url<br>";
-	}
+    }
+    
+    // image detail
+    $imgTags = $parser->getImgTags();
+    foreach($imgTags as $img) {
+        $src = $img->getAttribute("src");
+        $alt = $img->getAttribute("alt");
+        $title = $img->getAttribute("title");
+        if(!$title && !$alt) {      
+            // ignore img with no title and no alt
+			continue;
+        }
+        
+        $src = createLink($src, $url);
+        if(!in_array($src, $crawledImages)) {
+			$crawledImages[] = $src;
+            insertImage($url, $src, $alt, $title);
+        }
+    }
 }
 
 
@@ -92,7 +113,7 @@ function linkExists($url) {
 
 
 /**
- * Insert urls into database
+ * Insert urls into DB
  */
 function insertLinkToDb($url, $title, $description, $keywords) {
     global $conn;
@@ -108,10 +129,26 @@ function insertLinkToDb($url, $title, $description, $keywords) {
 }
 
 
+/**
+ * Insert image into DB
+ */
+function insertImage($url, $src, $alt, $title) {
+    global $conn;
+    $query = $conn->prepare("INSERT INTO images(siteUrl, imageUrl, alt, title)
+                            VALUES(:siteUrl, :imageUrl, :alt, :title)");
+
+	$query->bindParam(":siteUrl", $url);
+	$query->bindParam(":imageUrl", $src);
+	$query->bindParam(":alt", $alt);
+	$query->bindParam(":title", $title);
+
+	return $query->execute();
+}
+
 
 function followLinks($url) {
     global $crawlingList;
-    global $crawledList;
+    global $crawledSites;
 
     $parser = new DomParser($url);
 
@@ -125,13 +162,12 @@ function followLinks($url) {
 
         $href = createLink($href, $url);
 
-        if (!in_array($href, $crawledList)) {
+        if (!in_array($href, $crawledSites)) {
             $crawlingList[] = $href;
-            $crawledList[] = $href;
+            $crawledSites[] = $href;
 
             getDetails($href);
         }
-        else return;
     }
 
     array_shift($crawlingList);
