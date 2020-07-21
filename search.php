@@ -8,6 +8,7 @@ if (isset($_GET["q"])) {
 }
 
 $type = isset($_GET["type"]) ? $_GET["type"] : "sites";
+$page = isset($_GET["page"]) ? $_GET["page"] : "1";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,11 +52,12 @@ $type = isset($_GET["type"]) ? $_GET["type"] : "sites";
     <main class="sites-wrapper">
         <?php 
         $resultsProvider = new SiteResultsProvider($conn);
+        $pageLimit = 20;
         $numResults = $resultsProvider->getNumResults($term);
 
         echo "<p class='sites-counts'>$numResults results found</p>";
 
-        echo $resultsProvider->getResultsHtml(1, 20, $term);
+        echo $resultsProvider->getResultsHtml($page, $pageLimit, $term);
         
         ?>
     </main>
