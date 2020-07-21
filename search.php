@@ -1,4 +1,6 @@
 <?php
+include("config.php");
+include("classes/SiteResultProvider.php");
 
 // Get search term
 if (isset($_GET["q"])) {
@@ -26,7 +28,7 @@ $type = isset($_GET["type"]) ? $_GET["type"] : "sites";
 
             <div class="search-wrapper">
                 <form action="search.php">
-                    <input class="search-box" type="text" name="q">
+                    <input class="search-box" type="text" name="q" value="<?php echo $term ?>">
                     <input class="search-button" type="submit" value="Search">
 
                 </form>
@@ -45,6 +47,18 @@ $type = isset($_GET["type"]) ? $_GET["type"] : "sites";
             </ul>
         </div> <!-- .tab-wrapper -->
     </header>
+
+    <main class="sites-wrapper">
+        <?php 
+        $resultsProvider = new SiteResultsProvider($conn);
+        $numResults = $resultsProvider->getNumResults($term);
+
+        echo "<p class='sites-counts'>$numResults results found</p>";
+
+        echo $resultsProvider->getResultsHtml(1, 20, $term);
+        
+        ?>
+    </main>
 
 
 </body>
