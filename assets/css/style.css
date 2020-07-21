@@ -187,3 +187,36 @@ header {
 .result-wrapper .description {
     font-size: 14px;
 }
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 26px;
+    
+}
+
+.page-buttons {
+    display: flex;
+}
+
+.page-buttons .button,
+.page-buttons .button a {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    text-decoration: none;
+}
+
+.page-buttons .button img {
+    height: 37px;
+}
+
+.page-buttons .button .number {
+    color: #000;
+    font-size: 12px;
+    text-align: center;
+}
+
+.page-buttons .button a .number  {
+    color: #4285f4;
+}

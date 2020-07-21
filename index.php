@@ -16,7 +16,7 @@
 
         <div class="search-wrapper">
             <form action="search.php">
-                <input class="search-box" type="text" name="q">
+                <input class="search-box" type="text" name="term">
                 <input class="search-button" type="submit" value="Search">
             </form>
         </div>
