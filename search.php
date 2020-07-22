@@ -1,6 +1,7 @@
 <?php
 include("config.php");
 include("classes/SiteResultProvider.php");
+include("classes/ImageResultProvider.php");
 
 // Get search term
 if (isset($_GET["term"])) {
@@ -25,7 +26,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : "1";
     <header>
         <div class="top-header">
             <div class="logo-wrapper">
-                <a href="/"><img src="assets/images/logo.png" alt="Lookup_Logo"></a>
+                <a href="/lookup"><img src="assets/images/logo.png" alt="Lookup_Logo"></a>
             </div>
 
             <div class="search-wrapper">
@@ -52,13 +53,20 @@ $page = isset($_GET["page"]) ? $_GET["page"] : "1";
     </header>
 
     <main>
-        <div class="sites-wrapper">
+        <div class="result-wrapper">
             <?php
-            $resultsProvider = new SiteResultsProvider($conn);
-            $pageSize = 20;
+
+            if ($type == "sites") {
+                $resultsProvider = new SiteResultsProvider($conn);
+                $pageSize = 20;
+            }
+            else {
+                $resultsProvider = new ImageResultsProvider($conn);
+                $pageSize = 30;
+            }
             $numResults = $resultsProvider->getNumResults($term);
 
-            echo "<p class='sites-counts'>$numResults results found</p>";
+            echo "<p class='result-counts'>$numResults results found</p>";
 
             echo $resultsProvider->getResultsHtml($page, $pageSize, $term);
 
@@ -114,7 +122,8 @@ $page = isset($_GET["page"]) ? $_GET["page"] : "1";
             </div>
         </div>
     </main>
-
+    <!-- Masonry -->
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 
