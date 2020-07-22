@@ -30,6 +30,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : "1";
 
             <div class="search-wrapper">
                 <form action="search.php">
+                    <input type="hidden" name="type" value="<?php echo $type ?>">
                     <input class="search-box" type="text" name="term" value="<?php echo $term ?>">
                     <input class="search-button" type="submit" value="Search">
 
