@@ -44,6 +44,9 @@ $(document).ready(function() {
 			}
 
 			return caption;
+		},
+		afterShow: function(instance, item) {
+			increaseImageClicks(item.src);
 		}
 	});
 
@@ -72,7 +75,6 @@ function loadImage(src, className) {
 
 
 function increaseLinkClicks(linkId, url) {
-
 	$.post("ajax/updateLinkCount.php", {linkId: linkId})
 	.done(function(result) {
 		if(result != "") {
@@ -82,7 +84,17 @@ function increaseLinkClicks(linkId, url) {
 
 		window.location.href = url;
 	});
+}
 
+
+function increaseImageClicks(imageUrl) {
+	$.post("ajax/updateImageCount.php", {imageUrl: imageUrl})
+	.done(function(result) {
+		if(result != "") {
+			alert(result);
+			return;
+		}
+	});
 }
 
 
