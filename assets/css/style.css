@@ -217,10 +217,22 @@ header {
     visibility: hidden;
 }
 
-.grid-item .detail:hover {
+.grid-item:hover .detail {
     visibility: visible;
 }
 
+
+/* fancybox */
+.fancybox-caption__body {
+    text-align: left;
+}
+
+.fancybox-caption a, 
+.fancybox-caption a:link, 
+.fancybox-caption a:visited 
+.fancybox-caption__body a {
+    color: #808080;
+}
 
 
 /* Pagination */
